@@ -1,10 +1,9 @@
 class Api::V1::ItemsController < ApplicationController
-  before_action :set_item, only: [:show, :update, :destroy]
+  before_action :set_item, only: [:show]
+  before_action :set_items, only: [:index]
 
   # GET /items
   def index
-    @items = Item.all
-
     render json: ItemSerializer.new(@items)
   end
 
@@ -13,39 +12,35 @@ class Api::V1::ItemsController < ApplicationController
     render json: ItemSerializer.new(@item)
   end
 
-  # POST /items
-  def create
-    @item = Item.new(item_params)
-
-    if @item.save
-      render json: @item, status: :created, location: @item
-    else
-      render json: @item.errors, status: :unprocessable_entity
-    end
-  end
-
-  # PATCH/PUT /items/1
-  def update
-    if @item.update(item_params)
-      render json: @item
-    else
-      render json: @item.errors, status: :unprocessable_entity
-    end
-  end
-
-  # DELETE /items/1
-  def destroy
-    @item.destroy
-  end
-
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_item
-      @item = Item.find(params[:id])
+      if(params.has_key?(:name))
+        @item = Item.find_by(name: params[:name])
+      elsif(params.has_key?(:description))
+        @item = Item.find_by(description: params[:description])
+      elsif(params.has_key?(:unit_price))
+        @item = Item.find_by(unit_price: params[:unit_price])
+      elsif(params.has_key?(:merchant_id))
+        @item = Item.find_by(merchant_id: params[:merchant_id])
+      else
+        @item = Item.find(params[:id])
+      end
     end
 
-    # Only allow a trusted parameter "white list" through.
-    def item_params
-      params.require(:item).permit(:name, :description, :unit_price)
+    def set_items
+      if(params.has_key?(:name))
+        @items = Item.where(name: params[:name])
+      elsif(params.has_key?(:description))
+        @items = Item.where(description: params[:description])
+      elsif(params.has_key?(:unit_price))
+        @items = Item.where(unit_price: params[:unit_price])
+      elsif(params.has_key?(:merchant_id))
+        @items = Item.where(merchant_id: params[:merchant_id])
+      else
+        @items = Item.all(params[:id])
+      end
     end
+
+
 end

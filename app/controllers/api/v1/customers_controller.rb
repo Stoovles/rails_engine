@@ -1,10 +1,9 @@
 class Api::V1::CustomersController < ApplicationController
-  before_action :set_customer, only: [:show, :update, :destroy]
+  before_action :set_customer, only: [:show]
+  before_action :set_customers, :only: [:index]
 
   # GET /customers
   def index
-    @customers = Customer.all
-
     render json: CustomerSerializer.new(@customers)
   end
 
@@ -13,39 +12,29 @@ class Api::V1::CustomersController < ApplicationController
     render json: CustomerSerializer.new(@customer)
   end
 
-  # POST /customers
-  def create
-    @customer = Customer.new(customer_params)
-
-    if @customer.save
-      render json: @customer, status: :created, location: @customer
-    else
-      render json: @customer.errors, status: :unprocessable_entity
-    end
-  end
-
-  # PATCH/PUT /customers/1
-  def update
-    if @customer.update(customer_params)
-      render json: @customer
-    else
-      render json: @customer.errors, status: :unprocessable_entity
-    end
-  end
-
-  # DELETE /customers/1
-  def destroy
-    @customer.destroy
-  end
+  def serializer
+  end 
 
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_customer
-      @customer = Customer.find(params[:id])
+      if(params.has_key?(:first_name))
+        @customer = Customer.find_by(first_name: params[:first_name])
+      elsif(params.has_key?(:last_name))
+        @customer = Customer.find_by(last_name: params[:last_name])
+      else
+        @customer = Customer.find(params[:id])
+      end
     end
 
-    # Only allow a trusted parameter "white list" through.
-    def customer_params
-      params.require(:customer).permit(:first_name, :last_name)
+    def set_customers
+      if(params.has_key?(:first_name))
+        @customers = Customer.where(first_name: params[:first_name])
+      elsif(params.has_key?(:last_name))
+        @customers = Customer.where(last_name: params[:last_name])
+      else
+        @customers = Customer.all
+      end
     end
+
 end
