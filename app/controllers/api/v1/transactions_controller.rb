@@ -1,4 +1,5 @@
 class Api::V1::TransactionsController < ApplicationController
+  include Randomness
   before_action :set_transaction, only: [:show]
   before_action :set_transactions, only: [:index]
 
@@ -12,10 +13,15 @@ class Api::V1::TransactionsController < ApplicationController
     render json: TransactionSerializer.new(@transaction)
   end
 
+  def serializer
+    TransactionSerializer
+  end
 
+  def model_object
+    Transaction
+  end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
     def set_transaction
       if(params.has_key?(:credit_card_number))
         @transaction = Transaction.find_by(credit_card_number: params[:credit_card_number])

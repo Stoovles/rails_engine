@@ -1,4 +1,5 @@
 class Api::V1::InvoicesController < ApplicationController
+  include Randomness
   before_action :set_invoice, only: [:show]
   before_action :set_invoices, only: [:index]
 
@@ -12,19 +13,26 @@ class Api::V1::InvoicesController < ApplicationController
     render json: InvoiceSerializer.new(@invoice)
   end
 
+  def serializer
+    InvoiceSerializer
+  end
+
+  def model_object
+    Invoice
+  end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_invoice
-      if(params.has_key?(:status))
-        @invoice = Invoice.find_by(status: params[:status])
-      elsif(params.has_key?(:merchant_id))
-        @invoice = Invoice.find_by(merchant_id: params[:merchant_id])
-      elsif(params.has_key?(:customer_id))
-        @invoice = Invoice.find_by(customer_id: params[:customer_id])
-      else
-        @invoice = Invoice.find(params[:id])
-      end
+  def set_invoice
+    if(params.has_key?(:status))
+      @invoice = Invoice.find_by(status: params[:status])
+    elsif(params.has_key?(:merchant_id))
+      @invoice = Invoice.find_by(merchant_id: params[:merchant_id])
+    elsif(params.has_key?(:customer_id))
+      @invoice = Invoice.find_by(customer_id: params[:customer_id])
+    else
+      @invoice = Invoice.find(params[:id])
+    end
+  end 
 
   def set_invoices
     if(params.has_key?(:status))
@@ -37,4 +45,5 @@ class Api::V1::InvoicesController < ApplicationController
       @invoices = Invoice.all
     end
   end
+
 end

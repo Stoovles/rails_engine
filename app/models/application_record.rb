@@ -1,8 +1,8 @@
 class ApplicationRecord < ActiveRecord::Base
   self.abstract_class = true
 
-  def random_record
-    self.take(1).order("RAND()")
+  def self.random_record
+    order("random()").take(1)
   end
 
 end

@@ -1,4 +1,5 @@
 class Api::V1::MerchantsController < ApplicationController
+  include Randomness
   before_action :set_merchant, only: [:show]
   before_action :set_merchants, only: [:index]
 
@@ -12,9 +13,15 @@ class Api::V1::MerchantsController < ApplicationController
     render json: MerchantSerializer.new(@merchant)
   end
 
+  def serializer
+    MerchantSerializer
+  end
+
+  def model_object
+    Merchant
+  end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
     def set_merchant
       if(params.has_key?(:name))
         @merchant = Merchant.find_by(name: params[:name])

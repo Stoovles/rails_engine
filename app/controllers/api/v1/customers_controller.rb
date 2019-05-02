@@ -1,4 +1,5 @@
 class Api::V1::CustomersController < ApplicationController
+  include Randomness
   before_action :set_customer, only: [:show]
   before_action :set_customers, :only: [:index]
 
@@ -13,10 +14,14 @@ class Api::V1::CustomersController < ApplicationController
   end
 
   def serializer
-  end 
+    CustomerSerializer
+  end
+
+  def model_object
+    Customer
+  end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
     def set_customer
       if(params.has_key?(:first_name))
         @customer = Customer.find_by(first_name: params[:first_name])

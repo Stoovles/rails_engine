@@ -1,4 +1,5 @@
 class Api::V1::InvoiceItemsController < ApplicationController
+  include Randomness
   before_action :set_invoice_item, only: [:show]
   before_action :set_invoice_items, only: [:index]
 
@@ -12,9 +13,15 @@ class Api::V1::InvoiceItemsController < ApplicationController
     render json: InvoiceItemSerializer.new(@invoice_item)
   end
 
+  def serializer
+    InvoiceItemSerializer
+  end
+
+  def model_object
+    InvoiceItem
+  end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
     def set_invoice_item
       if(params.has_key?(:quantity))
         @invoice_item = InvoiceItem.find_by(quantity: params[:quantity])

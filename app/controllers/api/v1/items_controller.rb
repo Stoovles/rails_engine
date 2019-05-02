@@ -1,4 +1,5 @@
 class Api::V1::ItemsController < ApplicationController
+  include Randomness
   before_action :set_item, only: [:show]
   before_action :set_items, only: [:index]
 
@@ -12,8 +13,15 @@ class Api::V1::ItemsController < ApplicationController
     render json: ItemSerializer.new(@item)
   end
 
+  def serializer
+    ItemSerializer
+  end
+
+  def model_object
+    Item
+  end
+
   private
-    # Use callbacks to share common setup or constraints between actions.
     def set_item
       if(params.has_key?(:name))
         @item = Item.find_by(name: params[:name])
