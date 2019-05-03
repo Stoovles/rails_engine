@@ -28,7 +28,7 @@ class Api::V1::ItemsController < ApplicationController
       elsif(params.has_key?(:description))
         @item = Item.find_by(description: params[:description])
       elsif(params.has_key?(:unit_price))
-        @item = Item.find_by(unit_price: params[:unit_price])
+        @item = Item.find_by(unit_price: (params[:unit_price].to_f*100).round)
       elsif(params.has_key?(:merchant_id))
         @item = Item.find_by(merchant_id: params[:merchant_id])
       else
@@ -42,11 +42,13 @@ class Api::V1::ItemsController < ApplicationController
       elsif(params.has_key?(:description))
         @items = Item.where(description: params[:description])
       elsif(params.has_key?(:unit_price))
-        @items = Item.where(unit_price: params[:unit_price])
+        @items = Item.where(unit_price: (params[:unit_price].to_f*100).round)
       elsif(params.has_key?(:merchant_id))
         @items = Item.where(merchant_id: params[:merchant_id])
+      elsif(params.has_key?(:id))
+        @items = Item.where(id: params[:id])
       else
-        @items = Item.all(params[:id])
+        @items = Item.all
       end
     end
 

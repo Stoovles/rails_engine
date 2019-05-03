@@ -33,6 +33,8 @@ class Api::V1::MerchantsController < ApplicationController
     def set_merchants
       if(params.has_key?(:name))
         @merchants = Merchant.where(name: params[:name])
+      elsif(params.has_key?(:id))
+        @merchants = Merchant.where(id: params[:id])
       else
         @merchants = Merchant.all
       end

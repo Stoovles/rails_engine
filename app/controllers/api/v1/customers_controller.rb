@@ -1,7 +1,7 @@
 class Api::V1::CustomersController < ApplicationController
   include Randomness
   before_action :set_customer, only: [:show]
-  before_action :set_customers, :only: [:index]
+  before_action :set_customers, only: [:index]
 
   # GET /customers
   def index
@@ -37,6 +37,8 @@ class Api::V1::CustomersController < ApplicationController
         @customers = Customer.where(first_name: params[:first_name])
       elsif(params.has_key?(:last_name))
         @customers = Customer.where(last_name: params[:last_name])
+      elsif(params.has_key?(:id))
+        @customers = Customer.where(id: params[:id])
       else
         @customers = Customer.all
       end

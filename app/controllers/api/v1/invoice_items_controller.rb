@@ -26,7 +26,7 @@ class Api::V1::InvoiceItemsController < ApplicationController
       if(params.has_key?(:quantity))
         @invoice_item = InvoiceItem.find_by(quantity: params[:quantity])
       elsif(params.has_key?(:unit_price))
-        @invoice_item = InvoiceItem.find_by(unit_price: params[:unit_price])
+        @invoice_item = InvoiceItem.find_by(unit_price: (params[:unit_price].to_f*100).round)
       elsif(params.has_key?(:invoice_id))
         @invoice_item = InvoiceItem.find_by(invoice_id: params[:invoice_id])
       elsif(params.has_key?(:item_id))
@@ -40,11 +40,13 @@ class Api::V1::InvoiceItemsController < ApplicationController
       if(params.has_key?(:quantity))
         @invoice_items = InvoiceItem.where(quantity: params[:quantity])
       elsif(params.has_key?(:unit_price))
-        @invoice_items = InvoiceItem.where(unit_price: params[:unit_price])
+        @invoice_items = InvoiceItem.where(unit_price: (params[:unit_price].to_f*100).round)
       elsif(params.has_key?(:invoice_id))
         @invoice_items = InvoiceItem.where(invoice_id: params[:invoice_id])
       elsif(params.has_key?(:item_id))
         @invoice_items = InvoiceItem.where(item_id: params[:item_id])
+      elsif(params.has_key?(:id))
+        @invoice_items = InvoiceItem.where(id: params[:id])
       else
         @invoice_items = InvoiceItem.all
       end

@@ -5,7 +5,7 @@ class Api::V1::TransactionsController < ApplicationController
 
   # GET /transactions
   def index
-    render json: TransactionSerializer.new(@transaction)
+    render json: TransactionSerializer.new(@transactions)
   end
 
   # GET /transactions/1
@@ -45,6 +45,8 @@ class Api::V1::TransactionsController < ApplicationController
         @transactions = Transaction.where(result: params[:result])
       elsif(params.has_key?(:invoice_id))
         @transactions = Transaction.where(invoice_id: params[:invoice_id])
+      elsif(params.has_key?(:id))
+        @transactions = Transaction.where(id: params[:id])
       else
         @transactions = Transaction.all
       end

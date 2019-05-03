@@ -32,7 +32,7 @@ class Api::V1::InvoicesController < ApplicationController
     else
       @invoice = Invoice.find(params[:id])
     end
-  end 
+  end
 
   def set_invoices
     if(params.has_key?(:status))
@@ -41,6 +41,8 @@ class Api::V1::InvoicesController < ApplicationController
       @invoices = Invoice.where(merchant_id: params[:merchant_id])
     elsif(params.has_key?(:customer_id))
       @invoices = Invoice.where(customer_id: params[:customer_id])
+    elsif(params.has_key?(:id))
+      @invoices = Invoice.where(id: params[:id])
     else
       @invoices = Invoice.all
     end
