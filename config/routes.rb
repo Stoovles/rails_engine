@@ -2,7 +2,11 @@ Rails.application.routes.draw do
 
   namespace :api do
     namespace :v1 do
-      # resources :items, only: [:show, :index]
+      #business logic for /items
+      get '/items/most_revenue', to: 'item_business_logics#index'
+      get '/items/most_items', to: 'item_business_logics#index'
+      # get '/items/:id/best_day', to: 'item_business_logics#show'
+      #endpoints
       get '/items', to: 'items#index'
       get '/items/random', to: 'items#random'
       get '/items/find', to: 'items#show'
@@ -13,7 +17,7 @@ Rails.application.routes.draw do
 
   namespace :api do
     namespace :v1 do
-      # resources :invoices, only: [:show, :index]
+      #endpoints
       get '/invoices', to: 'invoices#index'
       get '/invoices/random', to: 'invoices#random'
       get '/invoices/find', to: 'invoices#show'
@@ -24,18 +28,18 @@ Rails.application.routes.draw do
 
   namespace :api do
     namespace :v1 do
+      #endpoints
       get '/transactions', to: 'transactions#index'
       get '/transactions/random', to: 'transactions#random'
       get '/transactions/find', to: 'transactions#show'
       get '/transactions/find_all', to: 'transactions#index'
       get '/transactions/:id', to: 'transactions#show'
-      # resources :transactions, only: [:show, :index]
     end
   end
 
   namespace :api do
     namespace :v1 do
-      # resources :merchants, only: [:show, :index]
+      #endpoints
       get '/merchants', to: 'merchants#index'
       get '/merchants/random', to: 'merchants#random'
       get '/merchants/find', to: 'merchants#show'
@@ -46,7 +50,7 @@ Rails.application.routes.draw do
 
   namespace :api do
     namespace :v1 do
-      # resources :customers, only: [:show, :index]
+      #endpoints
       get '/customers', to: 'customers#index'
       get '/customers/random', to: 'customers#random'
       get '/customers/find', to: 'customers#show'
@@ -57,7 +61,7 @@ Rails.application.routes.draw do
 
   namespace :api do
     namespace :v1 do
-      # resources :customers, only: [:show, :index]
+      #endpoints
       get '/invoice_items', to: 'invoice_items#index'
       get '/invoice_items/random', to: 'invoice_items#random'
       get '/invoice_items/find', to: 'invoice_items#show'
@@ -78,6 +82,24 @@ Rails.application.routes.draw do
       get '/invoices/:id/merchant', to: 'invoice_relations#show'
       get '/customers/:id/invoices', to: 'customer_relations#index'
       get '/customers/:id/transactions', to: 'customer_relations#index'
+      get '/invoice_items/:id/item', to:'invoice_item_relations#show'
+      get '/invoice_items/:id/invoice', to:'invoice_item_relations#show'
+      get '/items/:id/invoice_items', to: 'item_relations#index'
+      get '/items/:id/merchant', to: 'item_relations#show'
+      get '/transactions/:id/invoice', to: 'transaction_relations#show'
+    end
+  end
+
+  namespace :api do
+    namespace :v1 do
+      # #business intelligence
+      # get '/merchants/most_revenue?quantity=x', to: ''
+      # get '/merchants/most_items?quantity=x', to: ''
+      get '/merchants/revenue', to: 'merchant_business_logics#index'
+      get '/merchants/:id/revenue', to: 'merchant_business_logics#show'
+      get '/merchants/:id/revenue?date=x', to: 'merchant_business_logics#show'
+      get '/merchants/:id/favorite_customer', to: 'merchant_business_logics#show'
+      get '/customers/:id/favorite_merchant', to: 'customer_business_logics#show'
     end
   end
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
