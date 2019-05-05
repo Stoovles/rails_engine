@@ -29,6 +29,10 @@ class Api::V1::InvoicesController < ApplicationController
       @invoice = Invoice.find_by(merchant_id: params[:merchant_id])
     elsif(params.has_key?(:customer_id))
       @invoice = Invoice.find_by(customer_id: params[:customer_id])
+    elsif(params.has_key?(:created_at))
+      @invoice = Invoice.find_by(created_at: params[:created_at])
+    elsif(params.has_key?(:updated_at))
+      @invoice = Invoice.find_by(updated_at: params[:updated_at])
     else
       @invoice = Invoice.find(params[:id])
     end
@@ -43,6 +47,10 @@ class Api::V1::InvoicesController < ApplicationController
       @invoices = Invoice.where(customer_id: params[:customer_id])
     elsif(params.has_key?(:id))
       @invoices = Invoice.where(id: params[:id])
+    elsif(params.has_key?(:created_at))
+      @invoices = Invoice.where(created_at: params[:created_at])
+    elsif(params.has_key?(:updated_at))
+      @invoices = Invoice.where(updated_at: params[:updated_at])
     else
       @invoices = Invoice.all
     end

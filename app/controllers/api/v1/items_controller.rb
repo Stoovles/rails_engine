@@ -31,6 +31,10 @@ class Api::V1::ItemsController < ApplicationController
         @item = Item.find_by(unit_price: (params[:unit_price].to_f*100).round)
       elsif(params.has_key?(:merchant_id))
         @item = Item.find_by(merchant_id: params[:merchant_id])
+      elsif(params.has_key?(:created_at))
+        @item = Item.find_by(created_at: params[:created_at])
+      elsif(params.has_key?(:updated_at))
+        @item = Item.find_by(updated_at: params[:updated_at])
       else
         @item = Item.find(params[:id])
       end
@@ -44,9 +48,13 @@ class Api::V1::ItemsController < ApplicationController
       elsif(params.has_key?(:unit_price))
         @items = Item.where(unit_price: (params[:unit_price].to_f*100).round)
       elsif(params.has_key?(:merchant_id))
-        @items = Item.where(merchant_id: params[:merchant_id])
+        @items = Item.unscoped.where(merchant_id: params[:merchant_id])
       elsif(params.has_key?(:id))
         @items = Item.where(id: params[:id])
+      elsif(params.has_key?(:created_at))
+        @items = Item.where(created_at: params[:created_at])
+      elsif(params.has_key?(:updated_at))
+        @items = Item.where(updated_at: params[:updated_at])
       else
         @items = Item.all
       end

@@ -74,8 +74,10 @@ Rails.application.routes.draw do
       get '/invoices/:id/transactions', to: 'invoice_relations#index'
       get '/invoices/:id/invoice_items', to: 'invoice_relations#index'
       get '/invoices/:id/items', to: 'invoice_relations#index'
-      get '/invoices/:id/customer', to: 'invoice_relations#index'
-      get '/invoices/:id/merchant', to: 'invoice_relations#index'
+      get '/invoices/:id/customer', to: 'invoice_relations#show'
+      get '/invoices/:id/merchant', to: 'invoice_relations#show'
+      get '/customers/:id/invoices', to: 'customer_relations#index'
+      get '/customers/:id/transactions', to: 'customer_relations#index'
     end
   end
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html

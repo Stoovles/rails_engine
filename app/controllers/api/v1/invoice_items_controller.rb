@@ -31,6 +31,10 @@ class Api::V1::InvoiceItemsController < ApplicationController
         @invoice_item = InvoiceItem.find_by(invoice_id: params[:invoice_id])
       elsif(params.has_key?(:item_id))
         @invoice_item = InvoiceItem.find_by(item_id: params[:item_id])
+      elsif(params.has_key?(:created_at))
+        @invoice_item = InvoiceItem.find_by(created_at: params[:created_at])
+      elsif(params.has_key?(:updated_at))
+        @invoice_item = InvoiceItem.find_by(updated_at: params[:updated_at])
       else
         @invoice_item = InvoiceItem.find(params[:id])
       end
@@ -47,8 +51,12 @@ class Api::V1::InvoiceItemsController < ApplicationController
         @invoice_items = InvoiceItem.where(item_id: params[:item_id])
       elsif(params.has_key?(:id))
         @invoice_items = InvoiceItem.where(id: params[:id])
+      elsif(params.has_key?(:created_at))
+        @invoice_items = InvoiceItem.where(created_at: params[:created_at])
+      elsif(params.has_key?(:updated_at))
+        @invoice_items = InvoiceItem.where(updated_at: params[:updated_at])
       else
-        @invoice_items = InvoiceItem.all
+        @invoice_items = InvoiceItem.order(id: :asc)
       end
     end
 

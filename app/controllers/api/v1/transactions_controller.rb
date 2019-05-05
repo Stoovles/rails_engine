@@ -31,6 +31,10 @@ class Api::V1::TransactionsController < ApplicationController
         @transaction = Transaction.find_by(result: params[:result])
       elsif(params.has_key?(:invoice_id))
         @transaction = Transaction.find_by(invoice_id: params[:invoice_id])
+      elsif(params.has_key?(:created_at))
+        @transaction = Transaction.find_by(created_at: params[:created_at])
+      elsif(params.has_key?(:updated_at))
+        @transaction = Transaction.find_by(updated_at: params[:updated_at])
       else
         @transaction = Transaction.find(params[:id])
       end
@@ -47,6 +51,10 @@ class Api::V1::TransactionsController < ApplicationController
         @transactions = Transaction.where(invoice_id: params[:invoice_id])
       elsif(params.has_key?(:id))
         @transactions = Transaction.where(id: params[:id])
+      elsif(params.has_key?(:created_at))
+        @transactions = Transaction.where(created_at: params[:created_at])
+      elsif(params.has_key?(:updated_at))
+        @transactions = Transaction.where(updated_at: params[:updated_at])
       else
         @transactions = Transaction.all
       end

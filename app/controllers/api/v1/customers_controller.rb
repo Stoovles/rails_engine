@@ -27,6 +27,10 @@ class Api::V1::CustomersController < ApplicationController
         @customer = Customer.find_by(first_name: params[:first_name])
       elsif(params.has_key?(:last_name))
         @customer = Customer.find_by(last_name: params[:last_name])
+      elsif(params.has_key?(:created_at))
+        @customer = Customer.find_by(created_at: params[:created_at])
+      elsif(params.has_key?(:updated_at))
+        @customer = Customer.find_by(updated_at: params[:updated_at])
       else
         @customer = Customer.find(params[:id])
       end
@@ -39,6 +43,10 @@ class Api::V1::CustomersController < ApplicationController
         @customers = Customer.where(last_name: params[:last_name])
       elsif(params.has_key?(:id))
         @customers = Customer.where(id: params[:id])
+      elsif(params.has_key?(:created_at))
+        @customers = Customer.where(created_at: params[:created_at])
+      elsif(params.has_key?(:updated_at))
+        @customers = Customer.where(updated_at: params[:updated_at])
       else
         @customers = Customer.all
       end
