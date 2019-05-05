@@ -1,10 +1,10 @@
 class Api::V1::InvoiceItemsController < ApplicationController
-  before_action :set_invoice_item, only: [:show, :update, :destroy]
+  include Randomness
+  before_action :set_invoice_item, only: [:show]
+  before_action :set_invoice_items, only: [:index]
 
   # GET /invoice_items
   def index
-    @invoice_items = InvoiceItem.all
-
     render json: InvoiceItemSerializer.new(@invoice_items)
   end
 
@@ -13,39 +13,51 @@ class Api::V1::InvoiceItemsController < ApplicationController
     render json: InvoiceItemSerializer.new(@invoice_item)
   end
 
-  # POST /invoice_items
-  def create
-    @invoice_item = InvoiceItem.new(invoice_item_params)
-
-    if @invoice_item.save
-      render json: @invoice_item, status: :created, location: @invoice_item
-    else
-      render json: @invoice_item.errors, status: :unprocessable_entity
-    end
+  def serializer
+    InvoiceItemSerializer
   end
 
-  # PATCH/PUT /invoice_items/1
-  def update
-    if @invoice_item.update(invoice_item_params)
-      render json: @invoice_item
-    else
-      render json: @invoice_item.errors, status: :unprocessable_entity
-    end
-  end
-
-  # DELETE /invoice_items/1
-  def destroy
-    @invoice_item.destroy
+  def model_object
+    InvoiceItem
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
     def set_invoice_item
-      @invoice_item = InvoiceItem.find(params[:id])
+      if(params.has_key?(:quantity))
+        @invoice_item = InvoiceItem.find_by(quantity: params[:quantity])
+      elsif(params.has_key?(:unit_price))
+        @invoice_item = InvoiceItem.find_by(unit_price: (params[:unit_price].to_f*100).round)
+      elsif(params.has_key?(:invoice_id))
+        @invoice_item = InvoiceItem.find_by(invoice_id: params[:invoice_id])
+      elsif(params.has_key?(:item_id))
+        @invoice_item = InvoiceItem.find_by(item_id: params[:item_id])
+      elsif(params.has_key?(:created_at))
+        @invoice_item = InvoiceItem.find_by(created_at: params[:created_at])
+      elsif(params.has_key?(:updated_at))
+        @invoice_item = InvoiceItem.find_by(updated_at: params[:updated_at])
+      else
+        @invoice_item = InvoiceItem.find(params[:id])
+      end
     end
 
-    # Only allow a trusted parameter "white list" through.
-    def invoice_item_params
-      params.require(:invoice_item).permit(:quantity, :unit_price)
+    def set_invoice_items
+      if(params.has_key?(:quantity))
+        @invoice_items = InvoiceItem.where(quantity: params[:quantity])
+      elsif(params.has_key?(:unit_price))
+        @invoice_items = InvoiceItem.where(unit_price: (params[:unit_price].to_f*100).round)
+      elsif(params.has_key?(:invoice_id))
+        @invoice_items = InvoiceItem.where(invoice_id: params[:invoice_id])
+      elsif(params.has_key?(:item_id))
+        @invoice_items = InvoiceItem.where(item_id: params[:item_id])
+      elsif(params.has_key?(:id))
+        @invoice_items = InvoiceItem.where(id: params[:id])
+      elsif(params.has_key?(:created_at))
+        @invoice_items = InvoiceItem.where(created_at: params[:created_at])
+      elsif(params.has_key?(:updated_at))
+        @invoice_items = InvoiceItem.where(updated_at: params[:updated_at])
+      else
+        @invoice_items = InvoiceItem.order(id: :asc)
+      end
     end
+
 end

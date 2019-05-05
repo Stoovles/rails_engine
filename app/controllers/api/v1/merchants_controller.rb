@@ -1,10 +1,10 @@
 class Api::V1::MerchantsController < ApplicationController
-  before_action :set_merchant, only: [:show, :update, :destroy]
+  include Randomness
+  before_action :set_merchant, only: [:show]
+  before_action :set_merchants, only: [:index]
 
   # GET /merchants
   def index
-    @merchants = Merchant.all
-
     render json: MerchantSerializer.new(@merchants)
   end
 
@@ -13,39 +13,40 @@ class Api::V1::MerchantsController < ApplicationController
     render json: MerchantSerializer.new(@merchant)
   end
 
-  # POST /merchants
-  def create
-    @merchant = Merchant.new(merchant_params)
-
-    if @merchant.save
-      render json: @merchant, status: :created, location: @merchant
-    else
-      render json: @merchant.errors, status: :unprocessable_entity
-    end
+  def serializer
+    MerchantSerializer
   end
 
-  # PATCH/PUT /merchants/1
-  def update
-    if @merchant.update(merchant_params)
-      render json: @merchant
-    else
-      render json: @merchant.errors, status: :unprocessable_entity
-    end
-  end
-
-  # DELETE /merchants/1
-  def destroy
-    @merchant.destroy
+  def model_object
+    Merchant
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
     def set_merchant
-      @merchant = Merchant.find(params[:id])
+      if(params.has_key?(:name))
+        @merchant = Merchant.find_by(name: params[:name])
+      elsif(params.has_key?(:created_at))
+        @merchant = Merchant.find_by(created_at: params[:created_at])
+      elsif(params.has_key?(:updated_at))
+        @merchant = Merchant.find_by(updated_at: params[:updated_at])
+      else
+        @merchant = Merchant.find(params[:id])
+      end
     end
 
-    # Only allow a trusted parameter "white list" through.
-    def merchant_params
-      params.require(:merchant).permit(:name)
+    def set_merchants
+      if(params.has_key?(:name))
+        @merchants = Merchant.where(name: params[:name])
+      elsif(params.has_key?(:id))
+        @merchants = Merchant.where(id: params[:id])
+      elsif(params.has_key?(:created_at))
+        @merchants = Merchant.where(created_at: params[:created_at])
+      elsif(params.has_key?(:updated_at))
+        @merchants = Merchant.where(updated_at: params[:updated_at])
+      else
+        @merchants = Merchant.all
+      end
     end
+
+
 end
